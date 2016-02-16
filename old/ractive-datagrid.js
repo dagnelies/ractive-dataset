@@ -1,14 +1,12 @@
-Ractive.components["datatable"] = Ractive.extend({
+Ractive.components["dataset"] = Ractive.extend({
 	data: {
 		data: [],
-		page: 1,
-		perpage: 20,
-		selection: 'multi',
-		selected: [],
-		fields: '',
-		labels: ''
+		filter: '',
+		sortby: '',
+		from: 0,
+		to: 0,
+		count: 1
 	},
-	template: "FILTER HEADERS <dataset filter='filter>"
 	computed: {
 		rows: function(){
 			var indexes = this.get('indexes')

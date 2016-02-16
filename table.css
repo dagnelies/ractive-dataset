@@ -1,0 +1,18 @@
+table {
+	width: 100%;
+	table-layout: fixed;
+	overflow: auto;
+	max-height: 500px;
+}
+
+table input {
+	width: 100%;
+}
+
+table * {
+	box-sizing: border-box;
+}
+
+table tr:hover {
+	background-color: #def;
+}

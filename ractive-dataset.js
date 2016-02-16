@@ -1,4 +1,14 @@
+/*
+The naive attempt would be to manipulate the original array directly.
+This is problematic because it first have to be filtered first, then sorted, then the from/to rows extracted.
+In order to do that in that order, you would need to work on a copy.
+But this is problematic as well since you'd loose the data-binding with the original array.
+
+The trick is to work directly on the array indexes.
+*/
 Ractive.components["dataset"] = Ractive.extend({
+	lazy: true,
+	isolated: true,
 	data: {
 		data: [],
 		filter: '',
@@ -65,6 +75,11 @@ Ractive.components["dataset"] = Ractive.extend({
 			
 			return result;
 		}
+	},
+	remove: function( keypath ) {
+		var dot = keypath.lastIndexOf(".")
+		var index = parseInt( keypath.substring(dot+1) )
+		this.splice('data', index, 1)
 	},
 	template: "{{#each rows}}{{#with data[this]}}{{>content}}{{/with}}{{/each}}"
 })

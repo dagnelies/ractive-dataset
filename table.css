@@ -1,0 +1,23 @@
+table {
+	width: 100%;
+	table-layout: fixed;
+	overflow: auto;
+	max-height: 500px;
+}
+
+table input {
+	width: 100%;
+}
+
+table * {
+	box-sizing: border-box;
+}
+
+tbody tr:hover {
+	background-color: #cea;
+}
+
+tr.selected {
+    color: #FFFFFF;
+    background-color: #ac6/*#729D34;*/
+}

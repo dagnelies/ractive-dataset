@@ -10,7 +10,7 @@
 	<link rel='stylesheet' href='table.css'>
 	
 	<!-- Ractive -->
-	<script src='ractive.min.js'></script>
+	<script src='http://cdn.ractivejs.org/edge/ractive.js'></script>
 	
 	<!-- to generate random users -->
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/chance/0.5.6/chance.min.js'></script>
@@ -52,86 +52,67 @@
 
 	<!-- Demo template -->
 	<script id='demo-template' type='text/ractive'>
-		<p>Lots of rows and infinite scrolling.</p>
-		<button onclick="addRandomNumbers(10000)">Add 10 000 rows * 100 columns = 1 million items!</button>
-		<p>The table currently contains {{count}} rows.</p>
+		<p>Search: <input value="{{filter}}" /> ({{count}} of {{users.length}})</p>
+		
 		<hr/>
-		<div style="overflow:auto; height:600px;" onscroll="onScroll(event)">
-			<table>
-				<tbody>
-					<tr style="height:{{30*from}}px"></tr>
-					<dataset data="{{numbers}}" filter="{{filter}}" from="{{from}}" to="{{to}}" count="{{count}}">
-						<tr style="height:30px">
-							{{#each .}}
-								<td><input value="{{.}}" /></td>
-							{{/each}}
-						</tr>
-					</dataset>
-					<tr style="height:{{30*(count-to)}}px"></tr>
-				</tbody>
-			</table>
+		
+		<table>
+			<thead>
+				<tr>
+					<th style="width:32px"></th>
+					<ts sortby="{{sortby}}" target="first_name">First Name</ts>
+					<ts sortby="{{sortby}}" target="last_name">Last Name</ts>
+					<ts sortby="{{sortby}}" target="email">Email</ts>
+					<ts sortby="{{sortby}}" target="address">Address</ts>
+					<th style="width:32px"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<dataset data="{{users}}" filter="{{filter}}" sortby="{{sortby}}" from="{{from}}" to="{{to}}" count="{{count}}">
+					<tr {{#if .selected}}class="selected"{{/if}}>
+						<td><input type="checkbox" checked="{{.selected}}" /></td>
+						<td><input value="{{.first_name}}" /></td>
+						<td><input value="{{.last_name}}" /></td>
+						<td><input value="{{.email}}" /></td>
+						<td><input value="{{.address}}" /></td>
+						<td><button on-click="remove(@keypath)">X</button></td>
+					</tr>
+				</dataset>
+			</tbody>
+		</table>
+		
+		<div style="float:right">
+			<pager page="{{page}}" of="{{pagecount}}" />
 		</div>
 		
+		<br/>
+		<hr/>
+		
+		<p><button onclick="addRandomUsers(100)">Add 100 entries</button> <button onclick="addRandomUsers(10000)">Add 10,000 entries !!!</button></p>
 	</script>
 
 
 
 	<!-- Demo code -->
 	<script id='demo-code'>
-		function addRandomNumbers(n) {
-			start = Date.now()
-			
-			var c = ractive.get('count')
-			var rows = []
-			for(var i=c; i<c+n; i++) {
-				var row = []
-				for(var j=0; j<100; j++) {
-					row.push( i*100 + j )
-				}
-				//ractive.push('numbers', row)
-				rows.push(row)
-			}
-			
-			var numbers = ractive.get('numbers')
-			numbers = numbers.concat(rows)
-			ractive.set('numbers', numbers)
-			
-			console.log( (Date.now() - start) + ' ms' )
-		}
 		ractive = new Ractive({
 			el: 'demo',
 			template: '#demo-template',
 			data: {
-				numbers: [],
+				users: [],
 				filter: '',
 				sortby: '',
-				from: 0,
-				to: 20
+				page: 1,
+				perpage: 20
 			},
-			onchange: function(e) {
-				//console.log(e)
+			computed: {
+				pagecount: 'Math.ceil(${count} / ${perpage})',
+				from: '(${page}-1) * ${perpage}',
+				to: '${page} * ${perpage}'
 			}
 		});
 		
-		function onScroll(e) {
-			console.log(e.target.scrollTop)
-			var y = e.target.scrollTop
-			var f = Math.floor(y / 30)
-			var t = f + 20
-			var c = ractive.get('count')
-			if( t + 20 > c )
-				addRandomNumbers(20)
-			ractive.set({from: f, to: t})
-			
-		}
-		
-		addRandomNumbers(40)
-		/*
-		ractive.observe('numbers.*.*', function(val,old,kp) {
-			if( old )
-				console.log(val)
-		})
-		*/
+		addRandomUsers(100);
 	</script>
 
 	<!-- Insert code into the page -->

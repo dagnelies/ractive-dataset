@@ -53,7 +53,7 @@
 	<!-- Demo template -->
 	<script id='demo-template' type='text/ractive'>
 		<p>Lots of rows and infinite scrolling.</p>
-		<button onclick="addRandomNumbers(10000)">Add 10 000 rows * 100 columns = 1 million items!</button>
+		<button onclick="addRandomNumbers(1000)">Add 1000 rows only because observers are slow!</button>
 		<p>The table currently contains {{count}} rows.</p>
 		<hr/>
 		<div style="overflow:auto; height:600px;" onscroll="onScroll(event)">
@@ -126,12 +126,12 @@
 		}
 		
 		addRandomNumbers(40)
-		/*
+		
 		ractive.observe('numbers.*.*', function(val,old,kp) {
 			if( old )
 				console.log(val)
 		})
-		*/
+		
 	</script>
 
 	<!-- Insert code into the page -->

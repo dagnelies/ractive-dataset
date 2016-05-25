@@ -81,7 +81,7 @@
 			for(var i=0; i<n; i++) {
 				var row = []
 				for(var j=0; j<100; j++) {
-					row.push(Math.random())
+					row.push( i*100 + j )
 				}
 				rows.push(row)
 			}
@@ -106,9 +106,8 @@
 		addRandomNumbers(10000);
 		console.log( Date.now() - start + ' ms')
 		
-		
 		function onScroll(e) {
-			// console.log(e.target.scrollTop)
+			console.log(e.target.scrollTop)
 			var y = e.target.scrollTop
 			var f = Math.floor(y / 30)
 			ractive.set({from: f, to: f+20})

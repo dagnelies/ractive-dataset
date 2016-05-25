@@ -7,11 +7,14 @@ table {
 table td {
 	width: 180px;
 }
-*/
+
 table input {
 	width: 100%;
 }
-
+*/
+table td {
+	padding: 0px 5px;
+}
 table * {
 	box-sizing: border-box;
 }

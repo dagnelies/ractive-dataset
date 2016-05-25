@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang='en'>
+<head>
+	<meta charset='utf-8'>
+	<title>Dataset plugin for Ractive.js</title>
+
+	<!-- CSS -->
+	<link href='http://fonts.googleapis.com/css?family=Voltaire' rel='stylesheet' type='text/css'>
+	<link rel='stylesheet' href='style.css'>
+	<link rel='stylesheet' href='table.css'>
+	
+	<!-- Ractive -->
+	<script src='http://cdn.ractivejs.org/edge/ractive.js'></script>
+	
+	<!-- to generate random users -->
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/chance/0.5.6/chance.min.js'></script>
+	<script src='random-users.js'></script>
+	
+	<!-- this plugin -->
+	<script src='ractive-dataset.js'></script>
+	<script src='ractive-pager.js'></script>
+	<!-- script src='http://dagnelies.github.io/ractive-bootstrap/bin/ractive-bootstrap.min.js'></script -->
+	
+</head>
+
+<body>
+
+	<a class='forkme' href='https://github.com/dagnelies/ractive-array'>Fork me on GitHub</a>
+
+	<header>
+		<h1>Array plugin for Ractive.js</h1>
+		<p class='strap'>
+			<span class='download'>Debug: &nbsp;&nbsp; <a href='ractive-array.js'>ractive-array.js</a><br/>
+			Minified: <a href='ractive-array.min.js'>ractive-array.min.js</a></span>
+			<span class='more-plugins'>more plugins at <a href='http://docs.ractivejs.org/latest/plugins'>docs.ractivejs.org/latest/plugins</a></span>
+		</p>
+	</header>
+	
+	<main>
+		
+		<div id='demo' class='clearfix'></div>
+
+		<pre id='demo-template-view' class='prettyprint lang-html'></pre>
+		
+		<pre id='demo-code-view' class='prettyprint lang-js'></pre>
+	</main>
+
+	<!-- add additional info such as your homepage here, if you want -->
+	<footer>
+		<p>Copyright &copy; Arnaud Dagnelies. Licensed MIT</p>
+	</footer>
+
+	<!-- Demo template -->
+	<script id='demo-template' type='text/ractive'>
+		<p>Search: <input value="{{filter}}" /> ({{count}} of {{users.length}})</p>
+		
+		<hr/>
+		
+		<table>
+			<thead>
+				<tr>
+					<th style="width:32px"></th>
+					<ts sortby="{{sortby}}" target="first_name">First Name</ts>
+					<ts sortby="{{sortby}}" target="last_name">Last Name</ts>
+					<ts sortby="{{sortby}}" target="email">Email</ts>
+					<ts sortby="{{sortby}}" target="address">Address</ts>
+					<th style="width:32px"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<dataset data="{{users}}" filter="{{filter}}" sortby="{{sortby}}" from="{{from}}" to="{{to}}" count="{{count}}">
+					<tr {{#if .selected}}class="selected"{{/if}}>
+						<td><input type="checkbox" checked="{{.selected}}" /></td>
+						<td><input value="{{.first_name}}" /></td>
+						<td><input value="{{.last_name}}" /></td>
+						<td><input value="{{.email}}" /></td>
+						<td><input value="{{.address}}" /></td>
+						<td><button on-click="remove(@keypath)">X</button></td>
+					</tr>
+				</dataset>
+			</tbody>
+		</table>
+		
+		<div style="float:right">
+			<pager page="{{page}}" of="{{pagecount}}" />
+		</div>
+		
+		<br/>
+		<hr/>
+		
+		<p><button onclick="addRandomUsers(100)">Add 100 entries</button> <button onclick="addRandomUsers(10000)">Add 10,000 entries !!!</button></p>
+	</script>
+
+
+
+	<!-- Demo code -->
+	<script id='demo-code'>
+		ractive = new Ractive({
+			el: 'demo',
+			template: '#demo-template',
+			data: {
+				users: [],
+				filter: '',
+				sortby: '',
+				page: 1,
+				perpage: 20
+			},
+			computed: {
+				pagecount: 'Math.ceil(${count} / ${perpage})',
+				from: '(${page}-1) * ${perpage}',
+				to: '${page} * ${perpage}'
+			}
+		});
+		
+		addRandomUsers(100);
+	</script>
+
+	<!-- Insert code into the page -->
+	<script src='prettify.js'></script>
+	<script src='demo.js'></script>
+</body>
+</html>

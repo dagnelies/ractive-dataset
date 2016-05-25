@@ -1,10 +1,13 @@
 table {
 	width: 100%;
-	table-layout: fixed;
-	overflow: auto;
-	max-height: 500px;
+	/*table-layout: fixed;*/
+	/*max-height: 500px;*/
 }
-
+/*
+table td {
+	width: 180px;
+}
+*/
 table input {
 	width: 100%;
 }
@@ -13,6 +16,11 @@ table * {
 	box-sizing: border-box;
 }
 
-table tr:hover {
-	background-color: #def;
+tbody tr:hover {
+	background-color: #cea;
+}
+
+tr.selected {
+    color: #FFFFFF;
+    background-color: #ac6/*#729D34;*/
 }

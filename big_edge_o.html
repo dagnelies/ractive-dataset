@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang='en'>
+<head>
+	<meta charset='utf-8'>
+	<title>Dataset plugin for Ractive.js</title>
+
+	<!-- CSS -->
+	<link href='http://fonts.googleapis.com/css?family=Voltaire' rel='stylesheet' type='text/css'>
+	<link rel='stylesheet' href='style.css'>
+	<link rel='stylesheet' href='table.css'>
+	
+	<!-- Ractive -->
+	<script src='http://cdn.ractivejs.org/edge/ractive.js'></script>
+	
+	<!-- to generate random users -->
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/chance/0.5.6/chance.min.js'></script>
+	<script src='random-users.js'></script>
+	
+	<!-- this plugin -->
+	<script src='ractive-dataset-edge.js'></script>
+	<script src='ractive-pager.js'></script>
+	<!-- script src='http://dagnelies.github.io/ractive-bootstrap/bin/ractive-bootstrap.min.js'></script -->
+	
+</head>
+
+<body>
+
+	<a class='forkme' href='https://github.com/dagnelies/ractive-dataset'>Fork me on GitHub</a>
+
+	<header>
+		<h1>Dataset plugin for Ractive.js</h1>
+		<p class='strap'>
+			<span class='download'>Debug: &nbsp;&nbsp; <a href='ractive-dataset.js'>ractive-dataset.js</a><br/>
+			Minified: <a href='ractive-dataset.min.js'>ractive-dataset.min.js</a></span>
+			<span class='more-plugins'>more plugins at <a href='http://docs.ractivejs.org/latest/plugins'>docs.ractivejs.org/latest/plugins</a></span>
+		</p>
+	</header>
+	
+	<main>
+		
+		<div id='demo' class='clearfix'></div>
+
+		<pre id='demo-template-view' class='prettyprint lang-html'></pre>
+		
+		<pre id='demo-code-view' class='prettyprint lang-js'></pre>
+	</main>
+
+	<!-- add additional info such as your homepage here, if you want -->
+	<footer>
+		<p>Copyright &copy; Arnaud Dagnelies. Licensed MIT</p>
+	</footer>
+
+	<!-- Demo template -->
+	<script id='demo-template' type='text/ractive'>
+		<p>Lots of rows and infinite scrolling.</p>
+		<button onclick="addRandomNumbers(10000)">Add 10 000 rows * 100 columns = 1 million items!</button>
+		<p>The table currently contains {{count}} rows.</p>
+		<hr/>
+		<div style="overflow:auto; height:600px;" onscroll="onScroll(event)">
+			<table>
+				<tbody>
+					<tr style="height:{{30*from}}px"></tr>
+					<dataset data="{{numbers}}" filter="{{filter}}" from="{{from}}" to="{{to}}" count="{{count}}">
+						<tr style="height:30px">
+							{{#each .}}
+								<td><input value="{{.}}" /></td>
+							{{/each}}
+						</tr>
+					</dataset>
+					<tr style="height:{{30*(count-to)}}px"></tr>
+				</tbody>
+			</table>
+		</div>
+		
+	</script>
+
+
+
+	<!-- Demo code -->
+	<script id='demo-code'>
+		function addRandomNumbers(n) {
+			start = Date.now()
+			
+			var c = ractive.get('count')
+			var rows = []
+			for(var i=c; i<c+n; i++) {
+				var row = []
+				for(var j=0; j<100; j++) {
+					row.push( i*100 + j )
+				}
+				//ractive.push('numbers', row)
+				rows.push(row)
+			}
+			
+			var numbers = ractive.get('numbers')
+			numbers = numbers.concat(rows)
+			ractive.set('numbers', numbers)
+			
+			console.log( (Date.now() - start) + ' ms' )
+		}
+		ractive = new Ractive({
+			el: 'demo',
+			template: '#demo-template',
+			data: {
+				numbers: [],
+				filter: '',
+				sortby: '',
+				from: 0,
+				to: 20
+			},
+			onchange: function(e) {
+				//console.log(e)
+			}
+		});
+		
+		function onScroll(e) {
+			console.log(e.target.scrollTop)
+			var y = e.target.scrollTop
+			var f = Math.floor(y / 30)
+			var t = f + 20
+			var c = ractive.get('count')
+			if( t + 20 > c )
+				addRandomNumbers(20)
+			ractive.set({from: f, to: t})
+			
+		}
+		
+		addRandomNumbers(40)
+		
+		ractive.observe('numbers.*.*', function(val,old,kp) {
+			if( old )
+				console.log(val)
+		})
+		
+	</script>
+
+	<!-- Insert code into the page -->
+	<script src='prettify.js'></script>
+	<script src='demo.js'></script>
+</body>
+</html>
